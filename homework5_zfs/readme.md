@@ -27,8 +27,9 @@
 ```
 
 ### 1. Определить алгоритм с наилучшим сжатием.
-
+    
     Создаём пул из двух дисков в режиме RAID 1    
+    
     ```
         zpool create otus1 mirror /dev/sdb /dev/sdc
         zpool create otus2 mirror /dev/sdd /dev/sde
