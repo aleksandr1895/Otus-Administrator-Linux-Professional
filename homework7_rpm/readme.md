@@ -1,36 +1,41 @@
 Цель домашнего задания
-Создать свой собственный rpm пакет и репозиторий, размещать там ранее собранный RPM пакеты.
+----------------------
+Создать свой собственный rpm пакет и репозиторий, размещать там ранее собранный RPM пакеты.    
 
 Описание домашнего задания
+--------------------------
+```
 1) Создать свой RPM пакет (можно взять свое приложение, либо собрать к примеру апач с определенными опциями).
 2) Создать свой репо и разместить там свой RPM.
+```
 
+### 1) Создать свой RPM пакет.
 
-1) Создать свой RPM пакет.
-Установливаем недостающие пакеты 
-    yum install -y redhat-lsb-core wget rpmdevtools rpm-build createrepo yum-utils gcc
+Установливаем недостающие пакеты    
+``    yum install -y redhat-lsb-core wget rpmdevtools rpm-build createrepo yum-utils gcc``
 
-Собираем nginx 1.23.3 c поддержкой tls v1.3. (openssl-1.1.1q)
+Собираем nginx 1.23.3 c поддержкой tls v1.3. (openssl-1.1.1q)    
 
- Описание используемых параметров:
-    --with-openssl=путь - задаёт путь к исходным текстам библиотеки OpenSSL. 
-    --with-openssl-opt=параметры - задаёт дополнительные параметры сборки OpenSSL.
+ Описание используемых параметров:    
+    ``--with-openssl=путь ``- задаёт путь к исходным текстам библиотеки OpenSSL.     
+    ``--with-openssl-opt= ``параметры - задаёт дополнительные параметры сборки OpenSSL.    
 
-Для примера возьмем пакет NGINX и соберём его с поддержкой openssl
-Загрузим SRPM пакет NGINX для дальнейшей работы над ним:
-    wget http://nginx.org/packages/mainline/centos/7/SRPMS/nginx-1.23.3-1.el7.ngx.src.rpm
-При установке такого пакета в домашней директории создается древо каталогов для
-сборки:
-    rpm -ivh nginx-1.23.3-1.el7.ngx.src.rpm
-Также нужно скачать и разархивировать последний исходник для openssl - он потребуетсā при сборке
+Для примера возьмем пакет NGINX и соберём его с поддержкой openssl    
+Загрузим SRPM пакет NGINX для дальнейшей работы над ним:    
+    ``wget http://nginx.org/packages/mainline/centos/7/SRPMS/nginx-1.23.3-1.el7.ngx.src.rpm``
+При установке такого пакета в домашней директории создается древо каталогов для сборки:    
+    ``rpm -ivh nginx-1.23.3-1.el7.ngx.src.rpm``
+Также нужно скачать и разархивировать последний исходник для openssl - он потребуется при сборке    
+```
     wget --no-check-certificate https://www.openssl.org/source/old/1.1.1/openssl-1.1.1q.tar.gz
     tar -xvf openssl-1.1.1q.tar.gz --directory /usr/lib
-
-Заранее поставим все зависимости чтобы в процессе сборки не было ошибок
-    yum-builddep rpmbuild/SPECS/nginx.spec
-Ну и собственно поправить сам spec файл чтобы NGINX собирался с необходимыми нам опциями:
+```
+Заранее поставим все зависимости чтобы в процессе сборки не было ошибок    
+    ``yum-builddep rpmbuild/SPECS/nginx.spec``
+Ну и собственно поправить сам spec файл чтобы NGINX собирался с необходимыми нам опциями:    
+```    
     sed -i "s|--with-stream_ssl_preread_module|--with-stream_ssl_preread_module --with-openssl=/usr/lib/openssl-1.1.1q --with-openssl-opt=enable-tls1_3|g" /root/rpmbuild/SPECS/nginx.spec
-
+```
 Теперь можно приступить к сборке RPM пакета:
     rpmbuild -ba rpmbuild/SPECS/nginx.spec
         + umask 022
@@ -55,11 +60,11 @@
                 Docs: http://nginx.org/en/docs/
             Process: 28249 ExecStart=/usr/sbin/nginx -c /etc/nginx/nginx.conf (code=exited, status=0/SUCCESS)
 
-Далее мы будем использовать его для доступа к своему репозиторию
+Далее мы будем использовать его для доступа к своему репозиторию    
 
-2) Создать свой репо и разместить там свой RPM.
+### 2) Создать свой репо и разместить там свой RPM.
 
-Теперь приступим к созданию своего репозитория. Директория для статики у NGINX по умолчанию /usr/share/nginx/html. Создадим там каталог repo:
+Теперь приступим к созданию своего репозитория. Директория для статики у NGINX по умолчанию ``/usr/share/nginx/html``.  Создадим там каталог repo:    
     mkdir /usr/share/nginx/html/repo
     cp /root/rpmbuild/RPMS/x86_64/nginx-1.23.3-1.el7.ngx.x86_64.rpm /usr/share/nginx/html/repo/
 Инициализируем репозиторий командой:
@@ -111,8 +116,9 @@ repodata/                                          27-Jan-2023 13:44            
 nginx-1.23.3-1.el7.ngx.x86_64.rpm                  27-Jan-2023 13:37             3774192
 
 
-Убедимся что репозиторий подключился и посмотрим что в нем есть:
+Убедимся что репозиторий подключился и посмотрим что в нем есть:    
+
     yum repolist enabled | grep otus
         otus                                otus-linux                                 1
     yum list --showduplicates | grep otus
-        nginx.x86_64                             1:1.23.3-1.el7.ngx            otus
+        nginx.x86_64                             1:1.23.3-1.el7.ngx            otusS
