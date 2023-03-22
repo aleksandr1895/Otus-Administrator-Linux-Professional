@@ -22,34 +22,36 @@
 
 Для примера возьмем пакет NGINX и соберём его с поддержкой openssl    
 Загрузим SRPM пакет NGINX для дальнейшей работы над ним:    
-    ``wget http://nginx.org/packages/mainline/centos/7/SRPMS/nginx-1.23.3-1.el7.ngx.src.rpm``
+    ``wget http://nginx.org/packages/mainline/centos/7/SRPMS/nginx-1.23.3-1.el7.ngx.src.rpm``    
 При установке такого пакета в домашней директории создается древо каталогов для сборки:    
-    ``rpm -ivh nginx-1.23.3-1.el7.ngx.src.rpm``
+    ``rpm -ivh nginx-1.23.3-1.el7.ngx.src.rpm``    
 Также нужно скачать и разархивировать последний исходник для openssl - он потребуется при сборке    
 ```
     wget --no-check-certificate https://www.openssl.org/source/old/1.1.1/openssl-1.1.1q.tar.gz
     tar -xvf openssl-1.1.1q.tar.gz --directory /usr/lib
 ```
 Заранее поставим все зависимости чтобы в процессе сборки не было ошибок    
-    ``yum-builddep rpmbuild/SPECS/nginx.spec``
+    ``yum-builddep rpmbuild/SPECS/nginx.spec``    
 Ну и собственно поправить сам spec файл чтобы NGINX собирался с необходимыми нам опциями:    
 ```    
     sed -i "s|--with-stream_ssl_preread_module|--with-stream_ssl_preread_module --with-openssl=/usr/lib/openssl-1.1.1q --with-openssl-opt=enable-tls1_3|g" /root/rpmbuild/SPECS/nginx.spec
 ```
-Теперь можно приступить к сборке RPM пакета:
+Теперь можно приступить к сборке RPM пакета:    
+```
     rpmbuild -ba rpmbuild/SPECS/nginx.spec
         + umask 022
         + cd /root/rpmbuild/BUILD
         + cd nginx-1.23.3
         + /usr/bin/rm -rf /root/rpmbuild/BUILDROOT/nginx-1.23.3-1.el7.ngx.x86_64
         + exit 0
-
-Убедимся что пакеты создались:
+```
+Убедимся что пакеты создались:    
+```
     ll rpmbuild/RPMS/x86_64/
 -rw-r--r--. 1 root root 3774192 янв 27 13:32 nginx-1.23.3-1.el7.ngx.x86_64.rpm
 -rw-r--r--. 1 root root 2042096 янв 27 13:32 nginx-debuginfo-1.23.3-1.el7.ngx.x86_64.rpm
-
-Теперь можно установить наш пакет и убедиться что nginx работает
+```
+Теперь можно установить наш пакет и убедиться что nginx работает    
 
     yum localinstall -y /root/rpmbuild/RPMS/x86_64/nginx-1.23.3-1.el7.ngx.x86_64.rpm
     systemctl start nginx
