@@ -32,7 +32,7 @@ COD=$(cat access-4560-644067.log | awk '{print $9}'| grep -v "-" | sort | uniq -
 
 echo -e "Данные за период:$timeH\n"Список IP адресов"\n$IP\n\n"Список запрашиваемых URL"\n$URL\n\n"Ошибки веб-сервера"\n$ERR\n\n$ERoR\n\n"Список всех кодов HTTP ответа с указанием их кол-ва"\n$COD\n" | mail -s "Log server Info" root@localhost
 
-
+ 
 # release lock
 rm -f $lock_file
 trap - INT TERM EXIT
