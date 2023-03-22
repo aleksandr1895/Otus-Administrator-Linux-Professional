@@ -29,44 +29,43 @@
 ### 1. Определить алгоритм с наилучшим сжатием.
 
     Создаём пул из двух дисков в режиме RAID 1    
-    ```
         zpool create otus1 mirror /dev/sdb /dev/sdc
         zpool create otus2 mirror /dev/sdd /dev/sde
         zpool create otus3 mirror /dev/sdf /dev/sdg
         zpool create otus4 mirror /dev/sdh /dev/sdi
-    ```   
+       
     Смотрим информацию о пулах:    
-    ```
+    
     zpool list
         NAME    SIZE  ALLOC   FREE  CKPOINT  EXPANDSZ   FRAG    CAP  DEDUP    HEALTH  ALTROOT
         otus1   480M  91.5K   480M        -         -     0%     0%  1.00x    ONLINE  -
         otus2   480M  91.5K   480M        -         -     0%     0%  1.00x    ONLINE  -
         otus3   480M  91.5K   480M        -         -     0%     0%  1.00x    ONLINE  -
         otus4   480M  91.5K   480M        -         -     0%     0%  1.00x    ONLINE 
-    ```
+    
 
     Добавим разные алгоритмы сжатия в каждую файловую систему:    
-    ```
+    
         zfs set compression=lzjb otus1
         zfs set compression=lz4 otus2
         zfs set compression=gzip-9 otus3
         zfs set compression=zle otus4
-    ```
+    
 
     Проверим, что все файловые системы имеют разные методы сжатия:    
-    ```
+    
     zfs get all | grep compression
         otus1 compression lzjb local
         otus2 compression lz4 local
         otus3 compression gzip-9 local
         otus4 compression zle local
-    ```
+    
 
     Сжатие файлов будет работать только с файлами, которые были добавлены после включение настройки сжатия.    
     Скачаем один и тот же текстовый файл во все пулы:    
 
-        ``for i in {1..4}; do wget -P /otus$i https://gutenberg.org/cache/epub/2600/pg2600.converter.log; done``
-    И выведем ``ls -lh /otus*``    
+        for i in {1..4}; do wget -P /otus$i https://gutenberg.org/cache/epub/2600/pg2600.converter.log; done
+    И выведем ``ls -lh /otus*    
     ```
         /otus1:
         total 22005
