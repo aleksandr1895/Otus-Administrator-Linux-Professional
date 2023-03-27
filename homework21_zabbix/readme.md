@@ -65,7 +65,8 @@ mysql> quit;
 Пароль   zabbix    
 
 Настраиваем Дашборд графики    
-CPU    
+CPU
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework21_zabbix/cpu_usage.png)
 Memory    
 Disk    
 Net    
