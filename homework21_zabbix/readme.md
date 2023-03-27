@@ -67,9 +67,13 @@ mysql> quit;
 Настраиваем Дашборд графики    
 CPU
 ![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework21_zabbix/cpu_usage.png)
-Memory    
-Disk    
-Net    
+Memory
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework21_zabbix/memory_usage.png)
+Disk
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework21_zabbix/disk_usage.png)
+Net 
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework21_zabbix/net_enp0s3.png)
+
 
 
 
