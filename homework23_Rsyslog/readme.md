@@ -85,7 +85,7 @@ LISTEN     0      128       [::]:80                    [::]:*
 ```
 Также работу ``nginx`` можно проверить на хосте.    
 В браузере ввведем в адерсную строку ``http://192.168.50.10``    
-Вставить
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework23_Rsyslog/nginx.png)
 Видим что nginx запустился корректно.    
 
 ### 3. Настройка центрального сервера сбора логов
