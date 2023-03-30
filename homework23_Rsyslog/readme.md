@@ -171,7 +171,7 @@ Mar 29 11:11:03 web nginx_access: 192.168.50.1 - - [29/Mar/2023:11:11:03 +0300] 
 Mar 29 11:12:29 web nginx_access: 192.168.50.1 - - [29/Mar/2023:11:12:29 +0300] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
 Mar 29 11:12:30 web nginx_access: 192.168.50.1 - - [29/Mar/2023:11:12:30 +0300] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
 ```
-
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework23_Rsyslog/Rsysloga.png)
 ```
 cat /var/log/rsyslog/web/nginx_error.log 
 
@@ -179,7 +179,7 @@ ar 29 11:29:26 web nginx_error: 2023/03/29 11:29:26 [error] 22376#22376: *3 open
 Mar 29 11:29:31 web nginx_error: 2023/03/29 11:29:31 [error] 22376#22376: *3 open() "/usr/share/nginx/html/graph" failed (2: No such file or directory), client: 192.168.50.1, server: _, request: "GET /graph HTTP/1.1", host: "192.168.50.10"
 Mar 29 11:29:32 web nginx_error: 2023/03/29 11:29:32 [error] 22376#22376: *3 open() "/usr/share/nginx/html/graph" failed (2: No such file or directory), client: 192.168.50.1, server: _, request: "GET /graph HTTP/1.1", host: "192.168.50.10"
 ```
-
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework23_Rsyslog/Rsysloge.png)
 ### 4. Настройка аудита, контролирующего изменения конфигурации nginx
 
 За аудит отвечает утилита auditd, в ``RHEL-based`` системах обычно он уже предустановлен.    
