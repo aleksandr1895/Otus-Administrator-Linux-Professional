@@ -212,7 +212,7 @@ node=web type=PATH msg=audit(1680084051.875:1094): item=0 name="/etc/nginx/nginx
 node=web type=CWD msg=audit(1680084051.875:1094):  cwd="/root"
 node=web type=SYSCALL msg=audit(1680084051.875:1094): arch=c000003e syscall=268 success=yes exit=0 a0=ffffffffffffff9c a1=aa7440 a2=1e4 a3=7fff9c3c4ea0 items=1 ppid=3304 pid=23323 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=4 comm="chmod" exe="/usr/bin/chmod" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="nginx_conf"
 ```
-
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework23_Rsyslog/AuditW.png)
 Также можно воспользоваться поиском по файлу ``/var/log/audit/audit.log``, указав наш тэг:    
 ```
 grep nginx_conf /var/log/audit/audit.log    
@@ -220,7 +220,7 @@ node=web type=CONFIG_CHANGE msg=audit(1680083826.676:1091): auid=4294967295 ses=
 node=web type=CONFIG_CHANGE msg=audit(1680083826.676:1092): auid=4294967295 ses=4294967295 subj=system_u:system_r:unconfined_service_t:s0 op=add_rule key="nginx_conf" list=4 res=1
 node=web type=SYSCALL msg=audit(1680084051.875:1094): arch=c000003e syscall=268 success=yes exit=0 a0=ffffffffffffff9c a1=aa7440 a2=1e4 a3=7fff9c3c4ea0 items=1 ppid=3304 pid=23323 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=4 comm="chmod" exe="/usr/bin/chmod" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="nginx_conf"
 ```
-
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework23_Rsyslog/AuditG.png)
 
 Далее настроим пересылку логов на удаленный сервер. ``Auditd`` по умолчанию не умеет пересылать логи, для пересылки на ``web-сервере`` потребуется установить пакет ``audispd-plugins``:    
 ``yum -y install audispd-plugins``    
@@ -273,7 +273,7 @@ node=web type=CONFIG_CHANGE msg=audit(1680083826.672:1089): audit_backlog_limit=
 node=web type=CONFIG_CHANGE msg=audit(1680083826.674:1090): audit_failure=1 old=1 auid=4294967295 ses=4294967295 subj=system_u:system_r:unconfined_service_t:s0 res=1
 node=web type=CONFIG_CHANGE msg=audit(1680083826.676:1091): auid=4294967295 ses=4294967295 subj=system_u:system_r:unconfined_service_t:s0 op=add_rule key="nginx_conf" list=4 res=1
 ```
-
+![Иллюстрация к проекту](https://github.com/aleksandr1895/Otus-Administrator-Linux-Professional/blob/master/homework23_Rsyslog/AuditR.png)
 
 
 
