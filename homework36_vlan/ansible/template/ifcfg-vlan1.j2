@@ -1,0 +1,13 @@
+VLAN=yes
+TYPE=Vlan
+PHYSDEV=eth1
+VLAN_ID={{ vlan_id }}
+VLAN_NAME_TYPE=DEV_PLUS_VID_NO_PAD
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=none
+IPADDR={{ vlan_ip }}
+PREFIX=24
+NAME=vlan{{ vlan_id }}
+DEVICE=eth1.{{ vlan_id }}
+ONBOOT=yes

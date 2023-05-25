@@ -1,0 +1,95 @@
+- name: Base set up
+  #Настройка производится на всех хостах
+  hosts: all
+  become: yes
+  tasks:
+  #Установка приложений на RedHat-based системах
+  - name: install softs on CentOS
+    yum:
+      name:
+        - vim
+        - traceroute
+        - tcpdump
+        - net-tools
+      state: present
+      update_cache: true
+    when: (ansible_os_family == "RedHat")
+  
+  #Установка приложений на Debiam-based системах
+  - name: install softs on Debian-based
+    apt:
+      name: 
+        - vim
+        - traceroute
+        - tcpdump
+        - net-tools
+      state: present
+      update_cache: true
+    when: (ansible_os_family == "Debian")
+ 
+ #Настройка Vlan1
+- name: set up vlan1
+  #Настройка будет производиться на хостах testClient1 и testServer1
+  hosts: testClient1,testServer1
+  #Настройка производится от root-пользователя
+  become: yes
+  tasks:
+  #Добавление темплейта в файл /etc/sysconfig/network-scripts/ifcfg-vlan1
+  - name: set up vlan1
+    template:
+      src: ifcfg-vlan1.j2
+      dest: /etc/sysconfig/network-scripts/ifcfg-vlan1
+      owner: root
+      group: root
+      mode: 0644
+  
+  #Перезапуск службы NetworkManager
+  - name: restart network for vlan1
+    service:
+      name: NetworkManager
+      state: restarted
+
+#Настройка vlan2
+- name: set up vlan2
+  hosts: testClient2,testServer2
+  become: yes
+  tasks:
+  - name: set up vlan2
+    template:
+      src: 50-cloud-init.yaml.j2
+      dest: /etc/netplan/50-cloud-init.yaml 
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: apply set up vlan2
+    shell: netplan apply
+    become: true
+
+   # Настройка LACP
+   - name: set up bond0
+  hosts: inetRouter,centralRouter
+  become: yes
+  tasks:
+  - name: set up ifcfg-bond0
+    template:
+      src: ifcfg-bond0.j2
+      dest: /etc/sysconfig/network-scripts/ifcfg-bond0
+      owner: root
+      group: root
+      mode: 0644
+  
+  - name: set up eth1,eth2
+    copy: 
+      src: "{{ item }}" 
+      dest: /etc/sysconfig/network-scripts/
+      owner: root
+      group: root
+      mode: 0644
+    with_items:
+      - templates/ifcfg-eth1
+      - templates/ifcfg-eth2
+  #Перезагрузка хостов 
+  - name: restart hosts for bond0
+    reboot:
+      reboot_timeout: 3600
