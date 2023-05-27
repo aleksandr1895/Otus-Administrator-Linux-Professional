@@ -1,0 +1,69 @@
+- name: Set up NAT on inetRouter
+    block: 
+      - name: install iptables
+        yum:
+          name:
+          - iptables
+          - iptables-services
+          state: present
+          update_cache: true
+      
+      - name: copy iptables config
+        template: 
+          src: iptables
+          dest: /etc/sysconfig/iptables
+          owner: root
+          group: root
+          mode: 0600
+
+vim
+    when: (ansible_hostname == "inetRouter")
+
+# Маршрутизация пакетов
+- name: set up forward packages across routers
+    sysctl:
+      name: net.ipv4.conf.all.forwarding
+      value: '1'
+      state: present
+    when: "'routers' in group_names"
+
+  # echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+  - name: add default gateway for centralRouter
+    lineinfile:
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+      line: GATEWAY=192.168.255.1 
+    when: (ansible_hostname == "centralRouter")
+
+  # echo "GATEWAY=192.168.0.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+  - name: add default gateway for centralServer
+    lineinfile:
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+      line: GATEWAY=192.168.0.1 
+    when: (ansible_hostname == "centralServer")
+
+- name: set up route on office1Server
+    template:
+      src: office1Server_route.j2
+      dest: /etc/netplan/50-vagrant.yaml
+      owner: root
+      group: root
+      mode: 0644
+    when: (ansible_hostname == "office1Server")
+    
+  - name: set up route on office2Server
+    template:
+      src: office2Server_route.j2
+      dest: /etc/network/interfaces
+      owner: root
+      group: root
+      mode: 0644
+    when: (ansible_hostname == "office2Server")
+
+  - name: set up route on centralRouter eth1
+    template:
+      src: centralRouter_route_eth1.j2
+      dest: /etc/sysconfig/network-scripts/route-eth1
+      owner: root
+      group: root
+      mode: 0644
+    when: (ansible_hostname == "centralRouter")
